@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8. The Legend Of Rock N Roll</title>
+
+<style>
+  :root {
+    --bg: #101018;
+    --panel: #1b1b29;
+    --panel-light: #29293b;
+    --gold: #ffd166;
+    --red: #ff5d73;
+    --green: #66e3a1;
+    --blue: #70c8ff;
+    --text: #f5f2eb;
+    --muted: #b8b4c8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 50% 0%, #34304a 0, transparent 40%),
+      var(--bg);
+    color: var(--text);
+    font: 15px/1.5 system-ui, Arial, sans-serif;
+  }
+
+  button, select { font: inherit; }
+
+  button {
+    border: 1px solid #55536b;
+    border-radius: 8px;
+    padding: 9px 13px;
+    background: #333247;
+    color: var(--text);
+    cursor: pointer;
+    transition: .15s;
+  }
+
+  button:hover:not(:disabled) {
+    background: #48445f;
+    transform: translateY(-1px);
+  }
+
+  button:disabled { opacity: .45; cursor: not-allowed; }
+
+  .gold { color: var(--gold); }
+  .muted { color: var(--muted); }
+
+  header {
+    padding: 18px 20px 10px;
+    text-align: center;
+  }
+
+  header h1 {
+    margin: 0;
+    color: var(--gold);
+    text-shadow: 0 3px 20px #ff9e4380;
+    font-size: clamp(23px, 4vw, 38px);
+  }
+
+  header p { margin: 4px 0 0; color: var(--muted); }
+
+  .layout {
+    width: min(1250px, 96vw);
+    margin: 12px auto 30px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 14px;
+  }
+
+  .main-column, .sidebar { min-width: 0; }
+
+  .panel {
+    background: linear-gradient(145deg, #20202f, #161620);
+    border: 1px solid #39384c;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 10px 30px #0005;
+    margin-bottom: 12px;
+  }
+
+  .panel h2, .panel h3 { margin: 0 0 10px; }
+  .panel h2 { font-size: 18px; color: var(--gold); }
+  .panel h3 { font-size: 15px; color: var(--blue); }
+
+  .game-topbar, .button-row, .stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  #world {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    border: 1px solid #55536b;
+    background: #171827;
+    image-rendering: pixelated;
+  }
+
+  .world-wrap { position: relative; }
+
+  .world-label {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    padding: 5px 9px;
+    border-radius: 7px;
+    background: #101018cc;
+    color: var(--gold);
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  .bar {
+    height: 11px;
+    width: 100%;
+    background: #09090f;
+    border: 1px solid #444255;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .bar > span {
+    display: block;
+    height: 100%;
+    width: 100%;
+    transition: width .2s;
+  }
+
+  #healthFill { background: linear-gradient(90deg, #e63d59, #ff8491); }
+  #xpFill { background: linear-gradient(90deg, #4ca8ff, #9cddff); }
+
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 7px 0 3px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .stat {
+    padding: 8px;
+    background: #ffffff08;
+    border-radius: 7px;
+  }
+
+  .stat b { color: var(--gold); }
+
+  .log {
+    height: 145px;
+    overflow: auto;
+    padding: 8px;
+    background: #09090f;
+    border-radius: 8px;
+    color: #ddd9e9;
+    font-size: 13px;
+  }
+
+  .log p { margin: 0 0 5px; }
+
+  .quest {
+    padding: 9px;
+    border-left: 3px solid var(--gold);
+    background: #ffffff08;
+    border-radius: 5px;
+    margin: 7px 0;
+  }
+
+  .quest.done { border-color: var(--green); opacity: .75; }
+  .quest small { display: block; color: var(--muted); }
+
+  .inventory-list, .skill-list { display: grid; gap: 7px; }
+
+  .item, .skill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: #ffffff08;
+    border-radius: 7px;
+  }
+
+  .item small, .skill small { display: block; color: var(--muted); }
+  .item button, .skill button { padding: 5px 8px; font-size: 12px; }
+
+  .controls {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .controls kbd {
+    color: var(--text);
+    background: #333247;
+    border: 1px solid #55536b;
+    border-radius: 4px;
+    padding: 2px 5px;
+  }
+
+  .mobile-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 48px);
+    gap: 5px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .mobile-controls button { padding: 8px 0; }
+  .mobile-controls button:nth-child(1) { grid-column: 2; }
+  .mobile-controls button:nth-child(2) { grid-column: 1; grid-row: 2; }
+  .mobile-controls button:nth-child(3) { grid-column: 2; grid-row: 2; }
+  .mobile-controls button:nth-child(4) { grid-column: 3; grid-row: 2; }
+  .mobile-controls button:nth-child(5) { grid-column: 2; grid-row: 3; }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    place-items: center;
+    padding: 15px;
+    background: #05050bd9;
+    z-index: 10;
+  }
+
+  .overlay.show { display: grid; }
+
+  .modal {
+    width: min(540px, 96vw);
+    max-height: 90vh;
+    overflow: auto;
+    background: #20202f;
+    border: 1px solid #66617c;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 20px 70px #000b;
+  }
+
+  .modal h2 { color: var(--gold); margin-top: 0; }
+
+  .combat-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .combat-status {
+    padding: 10px;
+    border-radius: 8px;
+    background: #ffffff09;
+    margin: 8px 0;
+  }
+
+  .footer-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 0 10px 20px;
+  }
+
+  @media (max-width: 850px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+  }
+
+  @media (max-width: 560px) {
+    .sidebar { display: block; }
+    .panel { padding: 11px; }
+  }
+</style>
+</head>
+
+<body>
+<header>
+  <h1>8. The Legend Of Rock N Roll</h1>
+  <p>A small browser RPG inspired by Rocky Roleng’s story</p>
+</header>
+
+<div class="layout">
+  <main class="main-column">
+    <section class="panel">
+      <div class="game-topbar">
+        <div><b class="gold" id="locationName">New Year Town</b> <span class="muted">— Explore the world</span></div>
+        <div class="button-row">
+          <button id="viewButton">View: Third-Person</button>
+          <button id="menuButton">Menu</button>
+        </div>
+      </div>
+
+      <div class="world-wrap">
+        <canvas id="world" width="960" height="540" aria-label="Game world"></canvas>
+        <div class="world-label" id="worldLabel">New Year Town</div>
+      </div>
+
+      <div class="controls">
+        Move: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrow keys.
+        Interact: <kbd>E</kbd>. Attack nearby enemies to start turn-based combat.
+        <div class="mobile-controls" aria-label="Movement controls">
+          <button data-move="up">▲</button>
+          <button data-move="left">◀</button>
+          <button data-move="interact">E</button>
+          <button data-move="right">▶</button>
+          <button data-move="down">▼</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Story & Game Log</h2>
+      <div class="log" id="gameLog" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <aside class="sidebar">
+    <section class="panel">
+      <h2>Player Character</h2>
+      <div class="stat-row"><b id="playerName">Radjii</b><span class="gold" id="className">Class: Rocker</span></div>
+      <div class="bar-label"><span>Health</span><span id="healthText"></span></div>
+      <div class="bar"><span id="healthFill"></span></div>
+      <div class="bar-label"><span>Experience</span><span id="xpText"></span></div>
+      <div class="bar"><span id="xpFill"></span></div>
+      <div class="stat-grid" style="margin-top:10px">
+        <div class="stat">Level <b id="levelStat">1</b></div>
+        <div class="stat">Gold <b id="goldStat">0</b></div>
+        <div class="stat">Attack <b id="attackStat">5</b></div>
+        <div class="stat">Defense <b id="defenseStat">1</b></div>
+        <div class="stat">Skill points <b id="skillPointsStat">0</b></div>
+        <div class="stat">View <b id="viewStat">Third-Person</b></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Quests</h2>
+      <div id="questList"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Inventory & Equipment</h2>
+      <div class="stat-row"><span>Equipped guitar</span><b class="gold" id="equipmentName">Old Guitar</b></div>
+      <div class="inventory-list" id="inventoryList" style="margin-top:8px"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Skill Tree</h2>
+      <p class="muted" style="margin:0 0 8px">Spend skill points earned by leveling up.</p>
+      <div class="skill-list" id="skillList"></div>
+    </section>
+
+    <section class="panel">
+      <h2>World Guide</h2>
+      <p class="muted" style="margin:0">
+        Find <b class="gold">Mira</b> near the town square. Talk to her to begin the main quest.
+        Defeat enemies to earn XP and gold. The boss waits near the stage.
+      </p>
+    </section>
+  </aside>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div class="footer-note">
+  Fictional game prototype. The story’s lesson is presented as a lighthearted caution about handling fireworks safely.
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const canvas = document.getElementById("world");
+  const ctx = canvas.getContext("2d");
+  const overlay = document.getElementById("overlay");
+  const modalContent = document.getElementById("modalContent");
+
+  const MAP = { width: 1200, height: 760, tile: 40 };
+  const keys = new Set();
+
+  const player = {
+    name: "Radjii",
+    x: 170,
+    y: 170,
+    size: 24,
+    speed: 3.2,
+    level: 1,
+    xp: 0,
+    xpNext: 40,
+    hp: 100,
+    maxHp: 100,
+    gold: 12,
+    baseAttack: 5,
+    baseDefense: 1,
+    skillPoints: 0,
+    skills: { powerChord: 0, toughTour: 0, quickHands: 0 },
+    equipment: "Old Guitar",
+    facing: "down"
+  };
+
+  const items = [
+    { id: "snack", name: "Town Snack", description: "Restores 30 health.", count: 2, type: "consumable" },
+    { id: "bandage", name: "First-Aid Kit", description: "Restores 50 health.", count: 1, type: "consumable" },
+    { id: "guitar", name: "Old Guitar", description: "+2 attack while equipped.", type: "weapon", attack: 2, owned: true },
+    { id: "amp", name: "Pocket Amp", description: "+4 attack while equipped.", type: "weapon", attack: 4, owned: false }
+  ];
+
+  const quests = [
+    {
+      id: "main",
+      title: "Main: The Lost Amplifier",
+      description: "Talk to Mira, defeat 3 Mischief Makers, then return to Mira.",
+      progress: 0,
+      goal: 3,
+      active: false,
+      complete: false,
+      reward: "60 XP and 25 gold"
+    },
+    {
+      id: "side",
+      title: "Side: A Snack for the Road",
+      description: "Find and speak with Benny the vendor.",
+      progress: 0,
+      goal: 1,
+      active: true,
+      complete: false,
+      reward: "20 XP and a Town Snack"
+    }
+  ];
+
+  const npcs = [
+    { id: "mira", name: "Mira the Musician", x: 320, y: 200, color: "#ffcf70", icon: "♪" },
+    { id: "benny", name: "Benny the Vendor", x: 510, y: 390, color: "#79d7a5", icon: "$" },
+    { id: "elder", name: "Town Elder", x: 900, y: 170, color: "#c9a5ff", icon: "!" }
+  ];
+
+  const enemies = [
+    { id: "m1", name: "Mischief Maker", x: 430, y: 170, hp: 18, maxHp: 18, attack: 4, xp: 12, gold: 5, color: "#f16b74", boss: false, alive: true },
+    { id: "m2", name: "Mischief Maker", x: 650, y: 300, hp: 18, maxHp: 18, attack: 4, xp: 12, gold: 5, color: "#f16b74", boss: false, alive: true },
+    { id: "m3", name: "Mischief Maker", x: 770, y: 510, hp: 18, maxHp: 18, attack: 4, xp: 12, gold: 5, color: "#f16b74", boss: false, alive: true },
+    { id: "boss", name: "The Stage Boss", x: 1040, y: 540, hp: 58, maxHp: 58, attack: 8, xp: 45, gold: 30, color: "#b276ff", boss: true, alive: true }
+  ];
+
+  const worldObjects = [
+    { type: "stage", x: 930, y: 430, w: 190, h: 120 },
+    { type: "house", x: 65, y: 290, w: 130, h: 100, color: "#d98265" },
+    { type: "house", x: 240, y: 440, w: 145, h: 105, color: "#8d92d9" },
+    { type: "house", x: 835, y: 95, w: 140, h: 100, color: "#d3a45c" },
+    { type: "tree", x: 80, y: 90 }, { type: "tree", x: 570, y: 120 },
+    { type: "tree", x: 690, y: 610 }, { type: "tree", x: 1100, y: 240 },
+    { type: "tree", x: 350, y: 650 }, { type: "tree", x: 1090, y: 680 }
+  ];
+
+  let currentCombat = null;
+  let viewMode = "Third-Person";
+  let camera = { x: 0, y: 0 };
+  let interactionCooldown = false;
+
+  function log(message) {
+    const box = document.getElementById("gameLog");
+    const p = document.createElement("p");
+    p.textContent = "• " + message;
+    box.prepend(p);
+  }
+
+  function attackPower() {
+    const weapon = items.find(i => i.id === player.equipment.toLowerCase().split(" ")[0]);
+    const equipmentBonus = player.equipment === "Pocket Amp" ? 4 : 2;
+    return player.baseAttack + equipmentBonus + player.skills.powerChord * 2;
+  }
+
+  function defensePower() {
+    return player.baseDefense + player.skills.toughTour * 2;
+  }
+
+  function updateUI() {
+    document.getElementById("healthText").textContent = `${player.hp} / ${player.maxHp}`;
+    document.getElementById("healthFill").style.width = `${Math.max(0, player.hp / player.maxHp * 100)}%`;
+    document.getElementById("xpText").textContent = `${player.xp} / ${player.xpNext}`;
+    document.getElementById("xpFill").style.width = `${Math.min(100, player.xp / player.xpNext * 100)}%`;
+    document.getElementById("levelStat").textContent = player.level;
+    document.getElementById("goldStat").textContent = player.gold;
+    document.getElementById("attackStat").textContent = attackPower();
+    document.getElementById("defenseStat").textContent = defensePower();
+    document.getElementById("skillPointsStat").textContent = player.skillPoints;
+    document.getElementById("viewStat").textContent = viewMode;
+    document.getElementById("equipmentName").textContent = player.equipment;
+    document.getElementById("viewButton").textContent = "View: " + viewMode;
+    renderQuests();
+    renderInventory();
+    renderSkills();
+  }
+
+  function renderQuests() {
+    const list = document.getElementById("questList");
+    list.innerHTML = "";
+    quests.forEach(q => {
+      const div = document.createElement("div");
+      div.className = "quest" + (q.complete ? " done" : "");
+      div.innerHTML = `<b>${q.complete ? "✓ " : ""}${q.title}</b>
+        <small>${q.description}</small>
+        <small>${q.complete ? "Completed — reward claimed" : `Progress: ${q.progress}/${q.goal} · Reward: ${q.reward}`}</small>`;
+      list.appendChild(div);
+    });
+  }
+
+  function renderInventory() {
+    const list = document.getElementById("inventoryList");
+    list.innerHTML = "";
+    items.filter(i => i.type === "consumable" ? i.count > 0 : i.owned).forEach(item => {
+      const row = document.createElement("div");
+      row.className = "item";
+      const info = document.createElement("div");
+      info.innerHTML = `<b>${item.name}${item.count ? ` ×${item.count}` : ""}</b><small>${item.description}</small>`;
+      row.appendChild(info);
+
+      if (item.type === "consumable") {
+        const btn = document.createElement("button");
+        btn.textContent = "Use";
+        btn.onclick = () => useItem(item.id);
+        row.appendChild(btn);
+      } else {
+        const btn = document.createElement("button");
+        btn.textContent = player.equipment === item.name ? "Equipped" : "Equip";
+        btn.disabled = player.equipment === item.name;
+        btn.onclick = () => {
+          player.equipment = item.name;
+          log(`${item.name} equipped.`);
+          updateUI();
+        };
+        row.appendChild(btn);
+      }
+      list.appendChild(row);
+    });
+  }
+
+  const skillData = [
+    { id: "powerChord", name: "Power Chord", description: "Increase attack by 2 per rank." },
+    { id: "toughTour", name: "Tough Tour", description: "Increase defense by 2 per rank." },
+    { id: "quickHands", name: "Quick Hands", description: "Increase healing from items by 10 per rank." }
+  ];
+
+  function renderSkills() {
+    const list = document.getElementById("skillList");
+    list.innerHTML = "";
+    skillData.forEach(skill => {
+      const row = document.createElement("div");
+      row.className = "skill";
+      const info = document.createElement("div");
+      info.innerHTML = `<b>${skill.name} · Rank ${player.skills[skill.id]}</b><small>${skill.description}</small>`;
+      const btn = document.createElement("button");
+      btn.textContent = "Upgrade";
+      btn.disabled = player.skillPoints <= 0 || player.skills[skill.id] >= 5;
+      btn.onclick = () => {
+        if (player.skillPoints <= 0 || player.skills[skill.id] >= 5) return;
+        player.skillPoints--;
+        player.skills[skill.id]++;
+        log(`${skill.name} upgraded.`);
+        updateUI();
+      };
+      row.append(info, btn);
+      list.appendChild(row);
+    });
+  }
+
+  function useItem(id) {
+    const item = items.find(i => i.id === id);
+    if (!item || item.count <= 0) return;
+    const bonus = player.skills.quickHands * 10;
+    const amount = id === "snack" ? 30 + bonus : 50 + bonus;
+    const oldHp = player.hp;
+    player.hp = Math.min(player.maxHp, player.hp + amount);
+    item.count--;
+    log(`${item.name} used. Restored ${player.hp - oldHp} health.`);
+    updateUI();
+    if (currentCombat) updateCombatModal();
+  }
+
+  function gainXP(amount) {
+    player.xp += amount;
+    log(`You earned ${amount} XP.`);
+    while (player.xp >= player.xpNext) {
+      player.xp -= player.xpNext;
+      player.level++;
+      player.skillPoints++;
+      player.maxHp += 10;
+      player.hp = player.maxHp;
+      player.xpNext = Math.floor(player.xpNext * 1.35);
+      log(`Level up! You are now level ${player.level}. +1 skill point and +10 max health.`);
+    }
+    updateUI();
+  }
+
+  function completeQuest(id) {
+    const q = quests.find(x => x.id === id);
+    if (!q || q.complete) return;
+    q.complete = true;
+    if (id === "main") {
+      player.gold += 25;
+      gainXP(60);
+      items.find(i => i.id === "amp").owned = true;
+      log("Main quest complete! Mira gave you the Pocket Amp.");
+    } else {
+      player.gold += 10;
+      items.find(i => i.id === "snack").count++;
+      gainXP(20);
+      log("Side quest complete! Benny gave you a snack and 10 gold.");
+    }
+    updateUI();
+  }
+
+  function nearestNPC() {
+    return npcs
+      .map(n => ({ n, d: Math.hypot(player.x - n.x, player.y - n.y) }))
+      .filter(x => x.d < 58)
+      .sort((a, b) => a.d - b.d)[0]?.n;
+  }
+
+  function nearestEnemy() {
+    return enemies
+      .filter(e => e.alive)
+      .map(e => ({ e, d: Math.hypot(player.x - e.x, player.y - e.y) }))
+      .filter(x => x.d < 55)
+      .sort((a, b) => a.d - b.d)[0]?.e;
+  }
+
+  function interact() {
+    if (interactionCooldown || overlay.classList.contains("show")) return;
+    interactionCooldown = true;
+    setTimeout(() => interactionCooldown = false, 250);
+
+    const npc = nearestNPC();
+    if (npc) {
+      talkTo(npc);
+      return;
+    }
+
+    const enemy = nearestEnemy();
+    if (enemy) {
+      startCombat(enemy);
+      return;
+    }
+
+    log("Nothing nearby to interact with. Find an NPC or enemy.");
+  }
+
+  function talkTo(npc) {
+    if (npc.id === "mira") {
+      const q = quests.find(x => x.id === "main");
+      if (!q.active && !q.complete) {
+        q.active = true;
+        log("Mira: “The stage’s amplifier is missing. Please help clear the troublemakers!” Main quest started.");
+      } else if (q.active && !q.complete && q.progress >= q.goal) {
+        completeQuest("main");
+        showDialogue("Mira the Musician", "Thank you, Radjii! The stage is ready again. Take this Pocket Amp as a reward.");
+      } else if (q.complete) {
+        showDialogue("Mira the Musician", "The music is back in town. Thanks again, Radjii!");
+      } else {
+        showDialogue("Mira the Musician", "Please defeat three Mischief Makers and come back to me.");
+      }
+      updateUI();
+      return;
+    }
+
+    if (npc.id === "benny") {
+      const q = quests.find(x => x.id === "side");
+      if (!q.complete) {
+        q.progress = 1;
+        completeQuest("side");
+      } else {
+        showDialogue("Benny the Vendor", "Stay safe out there, and enjoy the music!");
+      }
+      return;
+    }
+
+    showDialogue("Town Elder", "Welcome to New Year Town. Remember: fireworks are not toys. Leave them to trained adults.");
+  }
+
+  function showDialogue(name, text) {
+    modalContent.innerHTML = `
+      <h2>${escapeHTML(name)}</h2>
+      <p>${escapeHTML(text)}</p>
+      <button id="closeDialogue">Continue</button>`;
+    overlay.classList.add("show");
+    document.getElementById("closeDialogue").onclick = closeModal;
+  }
+
+  function startCombat(enemy) {
+    currentCombat = { enemy, defending: false };
+    log(`Battle started against ${enemy.name}!`);
+    updateCombatModal();
+  }
+
+  function updateCombatModal(message = "") {
+    if (!currentCombat) return;
+    const enemy = currentCombat.enemy;
+    modalContent.innerHTML = `
+      <h2>${enemy.boss ? "Boss Battle: " : "Battle: "}${escapeHTML(enemy.name)}</h2>
+      <div class="combat-status">
+        <b>Radjii</b> — HP ${player.hp}/${player.maxHp}<br>
+        <b>${escapeHTML(enemy.name)}</b> — HP ${enemy.hp}/${enemy.maxHp}
+      </div>
+      <div class="bar"><span style="width:${Math.max(0, enemy.hp / enemy.maxHp * 100)}%;background:linear-gradient(90deg,#b276ff,#ef9cff)"></span></div>
+      <p>${escapeHTML(message || "Choose your action.")}</p>
+      <div class="combat-actions">
+        <button id="attackAction">Rock Strike</button>
+        <button id="specialAction">Power Chord (2 MP*)</button>
+        <button id="defendAction">Defend</button>
+        <button id="itemAction">Use Healing Item</button>
+        <button id="runAction">Run Away</button>
+      </div>
+      <small class="muted">*Special attack is available once per battle in this prototype.</small>`;
+    overlay.classList.add("show");
+
+    document.getElementById("attackAction").onclick = () => playerAttack(false);
+    document.getElementById("specialAction").onclick = () => playerAttack(true);
+    document.getElementById("defendAction").onclick = defendTurn;
+    document.getElementById("itemAction").onclick = chooseCombatItem;
+    document.getElementById("runAction").onclick = runFromBattle;
+  }
+
+  function playerAttack(special) {
+    if (!currentCombat) return;
+    const enemy = currentCombat.enemy;
+    if (special && currentCombat.specialUsed) {
+      updateCombatModal("You already used Power Chord this battle.");
+      return;
+    }
+    if (special) currentCombat.specialUsed = true;
+
+    const base = attackPower() + Math.floor(Math.random() * 4);
+    const damage = special ? base * 2 : base;
+    enemy.hp = Math.max(0, enemy.hp - damage);
+    log(`${special ? "Power Chord" : "Rock Strike"} dealt ${damage} damage to ${enemy.name}.`);
+
+    if (enemy.hp <= 0) {
+      winBattle(enemy);
+      return;
+    }
+    enemyTurn();
+  }
+
+  function defendTurn() {
+    if (!currentCombat) return;
+    currentCombat.defending = true;
+    updateCombatModal("Radjii braces for the next attack.");
+    setTimeout(enemyTurn, 500);
+  }
+
+  function chooseCombatItem() {
+    const healing = items.find(i => i.id === "bandage" && i.count > 0)
+      || items.find(i => i.id === "snack" && i.count > 0);
+    if (!healing) {
+      updateCombatModal("No healing items left!");
+      return;
+    }
+    useItem(healing.id);
+    if (currentCombat) enemyTurn();
+  }
+
+  function enemyTurn() {
+    if (!currentCombat) return;
+    const enemy = currentCombat.enemy;
+    let damage = Math.max(1, enemy.attack - defensePower());
+    if (currentCombat.defending) {
+      damage = Math.max(1, Math.floor(damage / 2));
+      currentCombat.defending = false;
+    }
+    player.hp = Math.max(0, player.hp - damage);
+    log(`${enemy.name} hit Radjii for ${damage} damage.`);
+    updateUI();
+
+    if (player.hp <= 0) {
+      currentCombat = null;
+      player.hp = Math.max(1, Math.floor(player.maxHp * 0.4));
+      player.gold = Math.max(0, player.gold - 5);
+      closeModal();
+      log("Radjii was knocked out, then helped back to town. Lost 5 gold and recovered some health.");
+      updateUI();
+      return;
+    }
+    updateCombatModal(`${enemy.name} attacked for ${damage} damage.`);
+  }
+
+  function winBattle(enemy) {
+    enemy.alive = false;
+    currentCombat = null;
+    closeModal();
+    player.gold += enemy.gold;
+    gainXP(enemy.xp);
+    log(`Victory! Gained ${enemy.gold} gold.`);
+    if (!enemy.boss && quests.find(q => q.id === "main").active) {
+      const q = quests.find(q => q.id === "main");
+      q.progress = Math.min(q.goal, q.progress + 1);
+      if (q.progress >= q.goal) log("You defeated all three troublemakers. Return to Mira!");
+    }
+    if (enemy.boss) {
+      log("The Stage Boss is defeated! The town celebrates Radjii’s rock-and-roll victory.");
+      showDialogue("Victory!", "You restored the stage and became New Year Town’s legendary performer!");
+    }
+    updateUI();
+  }
+
+  function runFromBattle() {
+    if (!currentCombat) return;
+    const enemy = currentCombat.enemy;
+    currentCombat = null;
+    closeModal();
+    player.x = Math.max(30, player.x - 45);
+    log(`You escaped from ${enemy.name}.`);
+    updateUI();
+  }
+
+  function closeModal() {
+    overlay.classList.remove("show");
+    modalContent.innerHTML = "";
+  }
+
+  function escapeHTML(text) {
+    return String(text).replace(/[&<>"']/g, ch => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[ch]);
+  }
+
+  function drawWorld() {
+    const w = canvas.width, h = canvas.height;
+    camera.x = Math.max(0, Math.min(MAP.width - w, player.x - w / 2));
+    camera.y = Math.max(0, Math.min(MAP.height - h, player.y - h / 2));
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    ctx.translate(-camera.x, -camera.y);
+
+    // Ground
+    ctx.fillStyle = "#344b3d";
+    ctx.fillRect(0, 0, MAP.width, MAP.height);
+
+    // Decorative grid and paths
+    for (let x = 0; x < MAP.width; x += MAP.tile) {
+      for (let y = 0; y < MAP.height; y += MAP.tile) {
+        ctx.fillStyle = ((x / MAP.tile + y / MAP.tile) % 2) ? "#ffffff05" : "#00000005";
+        ctx.fillRect(x, y, MAP.tile, MAP.tile);
+      }
+    }
+    ctx.fillStyle = "#b99a6a";
+    ctx.fillRect(0, 215, MAP.width, 62);
+    ctx.fillRect(470, 0, 62, MAP.height);
+    ctx.fillRect(0, 560, 940, 48);
+
+    // Town objects
+    worldObjects.forEach(obj => drawObject(obj));
+
+    // NPCs
+    npcs.forEach(npc => drawCharacter(npc.x, npc.y, npc.color, npc.icon, npc.name));
+
+    // Enemies
+    enemies.filter(e => e.alive).forEach(e => {
+      drawCharacter(e.x, e.y, e.color, e.boss ? "★" : "!", e.name);
+      ctx.fillStyle = "#111";
+      ctx.fillRect(e.x - 19, e.y - 27, 38, 5);
+      ctx.fillStyle = e.boss ? "#c78cff" : "#ff6476";
+      ctx.fillRect(e.x - 19, e.y - 27, 38 * (e.hp / e.maxHp), 5);
+    });
+
+    // Player
+    drawCharacter(player.x, player.y, "#68c9ff", "♪", player.name, true);
+
+    // Interaction hint
+    if (nearestNPC() || nearestEnemy()) {
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 15px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText("Press E to interact / battle", player.x, player.y - 43);
+    }
+
+    ctx.restore();
+    drawMiniMap();
+    requestAnimationFrame(drawWorld);
+  }
+
+  function drawObject(obj) {
+    if (obj.type === "house") {
+      ctx.fillStyle = "#0005";
+      ctx.fillRect(obj.x + 5, obj.y + 8, obj.w, obj.h);
+      ctx.fillStyle = obj.color;
+      ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+      ctx.fillStyle = "#583d4b";
+      ctx.beginPath();
+      ctx.moveTo(obj.x - 10, obj.y);
+      ctx.lineTo(obj.x + obj.w / 2, obj.y - 48);
+      ctx.lineTo(obj.x + obj.w + 10, obj.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = "#5c392e";
+      ctx.fillRect(obj.x + obj.w * .42, obj.y + obj.h * .48, 28, obj.h * .52);
+      ctx.fillStyle = "#c9e7ff";
+      ctx.fillRect(obj.x + 15, obj.y + 25, 24, 22);
+      ctx.fillRect(obj.x + obj.w - 39, obj.y + 25, 24, 22);
+    } else if (obj.type === "tree") {
+      ctx.fillStyle = "#6a4834";
+      ctx.fillRect(obj.x - 6, obj.y + 12, 12, 30);
+      ctx.fillStyle = "#236448";
+      ctx.beginPath(); ctx.arc(obj.x, obj.y, 25, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#34845a";
+      ctx.beginPath(); ctx.arc(obj.x - 10, obj.y - 8, 15, 0, Math.PI * 2); ctx.fill();
+    } else if (obj.type === "stage") {
+      ctx.fillStyle = "#6b3e72";
+      ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+      ctx.fillStyle = "#c78cff";
+      ctx.fillRect(obj.x + 10, obj.y + 10, obj.w - 20, 12);
+      ctx.fillStyle = "#f8d47a";
+      ctx.font = "bold 20px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText("ROCK STAGE", obj.x + obj.w / 2, obj.y + 72);
+      ctx.fillStyle = "#333";
+      for (let i = 0; i < 4; i++) ctx.fillRect(obj.x + 25 + i * 40, obj.y + 90, 18, 25);
+    }
+  }
+
+  function drawCharacter(x, y, color, icon, label, isPlayer = false) {
+    ctx.fillStyle = "#0006";
+    ctx.beginPath(); ctx.ellipse(x, y + 13, 17, 7, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x, y, isPlayer ? 15 : 14, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "#fff9";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = "#171520";
+    ctx.font = "bold 15px system-ui";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(icon, x, y);
+    ctx.textBaseline = "alphabetic";
+    ctx.font = "12px system-ui";
+    ctx.fillStyle = "#fff";
+    ctx.fillText(label, x, y - 20);
+  }
+
+  function drawMiniMap() {
+    const mw = 150, mh = 95, x = canvas.width - mw - 12, y = 12;
+    ctx.fillStyle = "#101018d9";
+    ctx.fillRect(x, y, mw, mh);
+    ctx.strokeStyle = "#ffffff99";
+    ctx.strokeRect(x, y, mw, mh);
+    const sx = mw / MAP.width, sy = mh / MAP.height;
+    npcs.forEach(n => {
+      ctx.fillStyle = "#ffe082";
+      ctx.fillRect(x + n.x * sx - 2, y + n.y * sy - 2, 4, 4);
+    });
+    enemies.filter(e => e.alive).forEach(e => {
+      ctx.fillStyle = e.boss ? "#d397ff" : "#ff6476";
+      ctx.fillRect(x + e.x * sx - 2, y + e.y * sy - 2, 4, 4);
+    });
+    ctx.fillStyle = "#70c8ff";
+    ctx.beginPath();
+    ctx.arc(x + player.x * sx, y + player.y * sy, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function move(dx, dy) {
+    if (overlay.classList.contains("show")) return;
+    const nx = Math.max(20, Math.min(MAP.width - 20, player.x + dx));
+    const ny = Math.max(20, Math.min(MAP.height - 20, player.y + dy));
+    player.x = nx;
+    player.y = ny;
+    if (Math.abs(dx) > Math.abs(dy)) player.facing = dx > 0 ? "right" : "left";
+    else if (dy !== 0) player.facing = dy > 0 ? "down" : "up";
+    updateLocation();
+  }
+
+  function updateLocation() {
+    let name = "New Year Town";
+    if (player.x > 850 && player.y > 350) name = "Rock Stage";
+    else if (player.x > 550 && player.y > 430) name = "Riverside Road";
+    else if (player.x > 550) name = "Town Square";
+    document.getElementById("locationName").textContent = name;
+    document.getElementById("worldLabel").textContent = name;
+  }
+
+  function gameLoop() {
+    if (!overlay.classList.contains("show")) {
+      let dx = 0, dy = 0;
+      if (keys.has("ArrowLeft") || keys.has("a")) dx -= player.speed;
+      if (keys.has("ArrowRight") || keys.has("d")) dx += player.speed;
+      if (keys.has("ArrowUp") || keys.has("w")) dy -= player.speed;
+      if (keys.has("ArrowDown") || keys.has("s")) dy += player.speed;
+      if (dx && dy) { dx *= .707; dy *= .707; }
+      if (dx || dy) move(dx, dy);
+    }
+    requestAnimationFrame(gameLoop);
+  }
+
+  document.addEventListener("keydown", event => {
+    const key = event.key.toLowerCase();
+    if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(key)) event.preventDefault();
+    if (key === "e") interact();
+    if (key === "escape") closeModal();
+    keys.add(key);
+  });
+
+  document.addEventListener("keyup", event => keys.delete(event.key.toLowerCase()));
+  window.addEventListener("blur", () => keys.clear());
+
+  document.querySelectorAll("[data-move]").forEach(button => {
+    const action = button.dataset.move;
+    const press = event => {
+      event.preventDefault();
+      if (action === "interact") interact();
+      if (action === "up") move(0, -player.speed * 5);
+      if (action === "down") move(0, player.speed * 5);
+      if (action === "left") move(-player.speed * 5, 0);
+      if (action === "right") move(player.speed * 5, 0);
+    };
+    button.addEventListener("click", press);
+    button.addEventListener("touchstart", press, { passive: false });
+  });
+
+  document.getElementById("viewButton").onclick = () => {
+    viewMode = viewMode === "Third-Person" ? "First-Person" : "Third-Person";
+    // First-person is represented by a closer camera view in this canvas prototype.
+    canvas.style.filter = viewMode === "First-Person" ? "saturate(1.1) contrast(1.08)" : "";
+    updateUI();
+    log(`Camera changed to ${viewMode} view.`);
+  };
+
+  document.getElementById("menuButton").onclick = () => {
+    modalContent.innerHTML = `
+      <h2>Game Menu</h2>
+      <p>Use WASD or arrow keys to explore. Press E near characters to talk, or near enemies to battle.</p>
+      <div class="button-row">
+        <button id="resumeButton">Resume Game</button>
+        <button id="restartButton">Restart Game</button>
+      </div>`;
+    overlay.classList.add("show");
+    document.getElementById("resumeButton").onclick = closeModal;
+    document.getElementById("restartButton").onclick = () => location.reload();
+  };
+
+  log("Welcome to New Year Town! Find Mira near the town square.");
+  log("Story: In 1960, Radjii loved rock and roll. A firecracker accident injured his hand. He learned to be careful around fireworks.");
+  log("Moral: Fireworks can be dangerous. Never hold or play with them.");
+  updateUI();
+  drawWorld();
+  gameLoop();
+})();
+</script>
+</body>
+</html>
